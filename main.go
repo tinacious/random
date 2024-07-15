@@ -1,7 +1,10 @@
+/*
+Copyright © 2024 Tina Holly <info@tinaciousdesign.com>
+*/
 package main
 
-import "fmt"
+import "github.com/tinacious/random-cli/cmd"
 
 func main() {
-	fmt.Println("hello, random!")
+	cmd.Execute()
 }

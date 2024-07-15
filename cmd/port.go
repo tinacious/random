@@ -9,7 +9,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/tinacious/random-cli/utils"
+	"github.com/tinacious/random/utils"
 )
 
 var portCmd = &cobra.Command{

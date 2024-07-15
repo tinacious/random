@@ -6,7 +6,6 @@ package cmd
 import (
 	"fmt"
 	"log"
-	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/tinacious/random/utils"
@@ -39,5 +38,4 @@ func runPortCmd(cmd *cobra.Command, args []string) {
 
 	randomPort := utils.RandomNumberBetweenRange(start, end)
 	fmt.Println(randomPort)
-	os.Exit(0)
 }

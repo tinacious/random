@@ -6,7 +6,7 @@ lint:
 	gci write .
 
 test:
-	go test -v ./... -cover
+	./scripts/test_with_coverage.sh
 
 version:
 	echo 'Copy the following tag:';

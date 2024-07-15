@@ -1,4 +1,4 @@
-module github.com/tinacious/random-cli
+module github.com/tinacious/random
 
 go 1.20
 

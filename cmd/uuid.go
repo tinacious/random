@@ -8,6 +8,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/spf13/cobra"
+	"github.com/spf13/cobra/doc"
 )
 
 var uuidCmd = &cobra.Command{
@@ -21,4 +22,5 @@ var uuidCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(uuidCmd)
+	doc.GenMarkdownTree(rootCmd, "./docs")
 }

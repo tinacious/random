@@ -10,7 +10,7 @@ COLOR=F59300
 if (( $(echo "$COVERAGE <= 50" | bc -l) )) ; then
 	# Bad
     COLOR=D00071
-    elif (( $(echo "$COVERAGE > 80" | bc -l) )); then
+    elif (( $(echo "$COVERAGE > 70" | bc -l) )); then
 	# Good
     COLOR=09D000
 fi

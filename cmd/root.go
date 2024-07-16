@@ -22,7 +22,7 @@ func Execute() {
 		os.Exit(1)
 	}
 
-	if os.Getenv("DOCS") == "1" {
+	if os.Getenv("GENERATE_RANDOM_DOCS") == "1" {
 		fmt.Println("📑 Generating documentation in ./docs")
 		doc.GenMarkdownTree(rootCmd, "./docs")
 	}

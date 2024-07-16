@@ -11,3 +11,5 @@ test:
 version:
 	./scripts/create_git_version_tag.sh
 
+doc:
+	DOCS=1 go run main.go

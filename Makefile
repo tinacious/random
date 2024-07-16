@@ -9,5 +9,5 @@ test:
 	./scripts/test_with_coverage.sh
 
 version:
-	echo 'Copy the following tag:';
-	echo "\n0.0.0-$$(date +%s)\n";
+	./scripts/create_git_version_tag.sh
+

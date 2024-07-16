@@ -10,6 +10,7 @@
 
 ### SEE ALSO
 
+* [random appname](random_appname.md)	 - Generate a name for your new app
 * [random hex](random_hex.md)	 - A random hex value
 * [random port](random_port.md)	 - Generates a random port number
 * [random uuid](random_uuid.md)	 - Generates an RFC 4122-compliant UUID

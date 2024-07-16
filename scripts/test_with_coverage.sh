@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 
-go test ./... -coverprofile coverage.out
+go test -v ./... -coverprofile coverage.out
 COVERAGE=`go tool cover -func=coverage.out | grep total: | grep -Eo '[0-9]+\.[0-9]+'`
 echo $COVERAGE
 

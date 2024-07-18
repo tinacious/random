@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>random colours</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+    }
+    .colours {
+      display: flex;
+      flex-wrap: wrap;
+    }
+    .colour {
+      text-decoration: none;
+      height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .colour-label {
+      background: #000;
+      color: #fff;
+      padding: 0.3rem 0.5rem;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="colours">{{ range .Colours }}
+    <a class="colour" style="background-color: #{{.}};" target="_blank" rel="noreferrer noopener" href="https://coolors.co/{{.}}">
+      <span class="colour-label">#{{.}}</span>
+    </a>{{ end }}
+  </div>
+</body>
+
+</html>

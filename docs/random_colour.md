@@ -1,15 +1,15 @@
-## random appname
+## random colour
 
-Generate a name for your new app
+Generate a single colour. For more, use `random colours n`
 
 ```
-random appname [flags]
+random colour [flags]
 ```
 
 ### Options
 
 ```
-  -h, --help   help for appname
+  -h, --help   help for colour
 ```
 
 ### SEE ALSO

@@ -18,7 +18,7 @@ var bignumCmd = &cobra.Command{
 	Long:  "Do you ever feel like adding a giant random number to your sentences? You can get one with `random bignum`",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		n := utils.RandomNumberBetweenRange(9999999, 1000000000000000000)
+		n := utils.RandomNumberBetweenRange(9999999, 1000000000)
 		formattedNumber := utils.FormatNumberWithDelimiter(n, flagThousandsDelimiter)
 
 		fmt.Println(formattedNumber)

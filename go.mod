@@ -7,6 +7,7 @@ require (
 	github.com/spf13/cobra v1.8.1
 	github.com/stretchr/testify v1.9.0
 	github.com/yelinaung/go-haikunator v0.0.0-20221222235932-36bf4c441150
+	golang.org/x/text v0.16.0
 )
 
 require (

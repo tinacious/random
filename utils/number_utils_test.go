@@ -14,3 +14,10 @@ func TestRandomNumberBetweenRange(t *testing.T) {
 		assert.GreaterOrEqual(t, 15, result)
 	}
 }
+
+func TestFormatNumberWithDelimiter(t *testing.T) {
+	assert.Equal(t, "123,456,789", FormatNumberWithDelimiter(123456789, ","))
+	assert.Equal(t, "123.456.789", FormatNumberWithDelimiter(123456789, "."))
+	assert.Equal(t, "9,999,999", FormatNumberWithDelimiter(9999999, ","))
+	assert.Equal(t, "9 999 999", FormatNumberWithDelimiter(9999999, " "))
+}

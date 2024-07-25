@@ -5,12 +5,11 @@ package cmd
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/spf13/cobra"
 	"github.com/tinacious/random/utils"
 )
-
-var flagThousandsDelimiter string
 
 var bignumCmd = &cobra.Command{
 	Use:   "bignum",
@@ -18,15 +17,20 @@ var bignumCmd = &cobra.Command{
 	Long:  "Do you ever feel like adding a giant random number to your sentences? You can get one with `random bignum`",
 
 	Run: func(cmd *cobra.Command, args []string) {
+		delimiter, err := cmd.Flags().GetString("delimiter")
+		if err != nil {
+			log.Fatal("invalid flag: delimiter")
+		}
+
 		n := utils.RandomNumberBetweenRange(9999999, 1000000000)
-		formattedNumber := utils.FormatNumberWithDelimiter(n, flagThousandsDelimiter)
+		formattedNumber := utils.FormatNumberWithDelimiter(n, delimiter)
 
 		fmt.Println(formattedNumber)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(bignumCmd)
+	bignumCmd.Flags().StringP("delimiter", "d", ",", "Thousands delimiter")
 
-	bignumCmd.Flags().StringVarP(&flagThousandsDelimiter, "delimiter", "d", ",", "Thousands delimiter")
+	rootCmd.AddCommand(bignumCmd)
 }

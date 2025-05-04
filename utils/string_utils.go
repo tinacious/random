@@ -3,6 +3,7 @@ package utils
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"strings"
 )
 
 func RandomHex(length int) (string, error) {
@@ -12,4 +13,18 @@ func RandomHex(length int) (string, error) {
 	}
 
 	return hex.EncodeToString(bytes), nil
+}
+
+func TrimEmptyLines(input string) string {
+	strs := strings.Split(input, "\n")
+	str := ""
+	for _, s := range strs {
+		if len(strings.TrimSpace(s)) == 0 {
+			continue
+		}
+		str += s + "\n"
+	}
+	str = strings.TrimSuffix(str, "\n")
+
+	return str
 }

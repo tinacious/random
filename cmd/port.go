@@ -24,10 +24,10 @@ func init() {
 
 func runPortCmd(cmd *cobra.Command, args []string) {
 	var start int = 1024
-	var end int = 66535
+	var end int = 65535
 
 	if len(args) > 0 {
-		s, e, err := utils.IntRangeFromString(args[0], 1024, 66535)
+		s, e, err := utils.IntRangeFromString(args[0], 1024, 65535)
 		if err != nil {
 			log.Fatalf("invalid int range: %s", err.Error())
 		}

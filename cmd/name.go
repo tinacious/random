@@ -21,12 +21,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		service := utils.NewNameService()
-		// names, err = utils.RandomName()
 
-		f := service.GetFirstNamesNonBinary()
-		fmt.Printf("Names: %v (%d) last = '%s'", f, len(f), f[len(f)-1])
-		// service.RandomName()
+		service := utils.NewPopulatedService()
+
+		fmt.Printf("name f: %s\n", service.RandomFirstNameFemale())
+		fmt.Printf("name m: %s\n", service.RandomFirstNameMale())
+		fmt.Printf("name nb: %s\n", service.RandomFirstNameNonBinary())
+		fmt.Printf("name last: %s\n", service.RandomLastName())
 	},
 }
 

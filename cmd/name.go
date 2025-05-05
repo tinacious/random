@@ -6,6 +6,9 @@ package cmd
 import (
 	_ "embed"
 	"fmt"
+	"log"
+	"slices"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/tinacious/random/utils"
@@ -13,34 +16,36 @@ import (
 
 var nameCmd = &cobra.Command{
 	Use:   "name",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Generate a random name",
+	Long: `Generates a random name from a set of names (1000 female, 1000 male, 300 unisex).
+When no gender is specified, the entire dataset will be sampled.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		gender, err := cmd.Flags().GetString("gender")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		supportedGenders := utils.AllNameGenderKeys()
+		if !slices.Contains(supportedGenders, gender) {
+			log.Fatalf("supported genders include: %s", strings.Join(supportedGenders, ", "))
+		}
 
 		service := utils.NewPopulatedService()
 
-		fmt.Printf("name f: %s\n", service.RandomFirstNameFemale())
-		fmt.Printf("name m: %s\n", service.RandomFirstNameMale())
-		fmt.Printf("name nb: %s\n", service.RandomFirstNameNonBinary())
-		fmt.Printf("name last: %s\n", service.RandomLastName())
+		firstName := service.RandomFirstName(utils.NameGenderFromString(gender))
+		lastName := service.RandomLastName()
+
+		fullName := firstName + " " + lastName
+
+		fmt.Println(fullName)
 	},
 }
 
 func init() {
+
+	// flags for gender
+	docsGender := utils.AllNameGenderDescriptionsWithKeys()
+	nameCmd.Flags().StringP("gender", "g", "a", fmt.Sprintf("Gender of the name. Omitting will sample all available names (optional) (options: %s)", strings.Join(docsGender, ", ")))
+
 	rootCmd.AddCommand(nameCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// nameCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// nameCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

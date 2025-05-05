@@ -2,6 +2,7 @@ package utils
 
 import (
 	_ "embed"
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -23,10 +24,13 @@ type NameService interface {
 	GetFirstNamesMale() []string
 	GetFirstNamesNonBinary() []string
 	GetLastNames() []string
-	RandomLastName() string
+
 	RandomFirstNameFemale() string
 	RandomFirstNameMale() string
 	RandomFirstNameNonBinary() string
+	RandomFirstNameAny() string
+	RandomFirstName(NameGender) string
+	RandomLastName() string
 }
 
 type nameService struct {
@@ -34,6 +38,127 @@ type nameService struct {
 	male      []string
 	nonBinary []string
 	last      []string
+}
+
+type NameGender int
+
+const (
+	NameGenderUnisex NameGender = iota
+	NameGenderFemale
+	NameGenderMale
+	NameGenderAny
+)
+
+var SupportedGenders = []NameGender{
+	NameGenderUnisex,
+	NameGenderFemale,
+	NameGenderMale,
+	NameGenderAny,
+}
+
+func NameGenderFromString(value string) NameGender {
+	if value == "f" {
+		return NameGenderFemale
+	}
+	if value == "m" {
+		return NameGenderMale
+	}
+	if value == "u" {
+		return NameGenderUnisex
+	}
+
+	// Invalid option defaults to any
+	return NameGenderAny
+}
+
+func (g NameGender) Key() (string, error) {
+	if g == NameGenderFemale {
+		return "f", nil
+	}
+	if g == NameGenderMale {
+		return "m", nil
+	}
+	if g == NameGenderUnisex {
+		return "u", nil
+	}
+	if g == NameGenderAny {
+		return "a", nil
+	}
+
+	return "", fmt.Errorf("unsupported gender: %d", g)
+}
+
+func (g NameGender) Description() (string, error) {
+	if g == NameGenderFemale {
+		return "female", nil
+	}
+	if g == NameGenderMale {
+		return "male", nil
+	}
+	if g == NameGenderUnisex {
+		return "unisex", nil
+	}
+	if g == NameGenderAny {
+		return "any/all", nil
+	}
+
+	return "", fmt.Errorf("unsupported gender: %d", g)
+}
+
+func AllNameGenderKeys() []string {
+	keys := make([]string, len(SupportedGenders))
+
+	for i, g := range SupportedGenders {
+		k, err := g.Key()
+		if err != nil {
+			panic(err)
+		}
+		keys[i] = k
+	}
+
+	return keys
+}
+
+func AllNameGenderDescriptions() []string {
+	keys := make([]string, len(SupportedGenders))
+
+	for i, g := range SupportedGenders {
+		k, err := g.Description()
+		if err != nil {
+			panic(err)
+		}
+		keys[i] = k
+	}
+
+	return keys
+}
+
+func AllNameGenderDescriptionsWithKeys() []string {
+	keys := make([]string, len(SupportedGenders))
+
+	for i, g := range SupportedGenders {
+		k, err := g.DescriptionWithKey()
+		if err != nil {
+			panic(err)
+		}
+		keys[i] = k
+	}
+
+	return keys
+}
+
+func (g NameGender) DescriptionWithKey() (string, error) {
+	key, err := g.Key()
+	if err != nil {
+		return "", fmt.Errorf("unsupported gender: %d", g)
+	}
+
+	description, err := g.Description()
+	if err != nil {
+		return "", fmt.Errorf("unsupported gender: %d", g)
+	}
+
+	return fmt.Sprintf("%s = %s", key, description), nil
 }
 
 func NewNameService(options ...func(*nameService)) NameService {
@@ -44,7 +169,7 @@ func NewNameService(options ...func(*nameService)) NameService {
 	return s
 }
 
-func NewPopulatedService(options ...func(*NameService)) NameService {
+func NewPopulatedService(options ...func(*nameService)) NameService {
 	return NewNameService(
 		WithFemaleNamesList(namesF),
 		WithMaleNamesList(namesM),
@@ -131,6 +256,32 @@ func (s *nameService) RandomFirstNameNonBinary() string {
 	}
 
 	return *name
+}
+
+// RandomFirstNameAny returns a first name of all available names (female, male, unisex)
+func (s *nameService) RandomFirstNameAny() string {
+	allNames := append(append(s.GetFirstNamesFemale(), s.GetFirstNamesMale()...), s.GetFirstNamesNonBinary()...)
+	name, err := RandomItemFromList(allNames)
+	if err != nil {
+		panic(err)
+	}
+
+	return *name
+}
+
+// RandomFirstName returns a random first name based on the gender
+func (s *nameService) RandomFirstName(gender NameGender) string {
+	if gender == NameGenderFemale {
+		return s.RandomFirstNameFemale()
+	}
+	if gender == NameGenderMale {
+		return s.RandomFirstNameMale()
+	}
+	if gender == NameGenderUnisex {
+		return s.RandomFirstNameNonBinary()
+	}
+
+	return s.RandomFirstNameAny()
 }
 
 // RandomLastName

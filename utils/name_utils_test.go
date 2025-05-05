@@ -27,9 +27,10 @@ Sally`
 		WithFemaleNamesList(fileInput),
 	)
 
-	result := subject.RandomFirstNameFemale()
+	result, err := subject.RandomFirstNameFemale()
 	expected := []string{"Samantha", "Sally"}
 
+	assert.Nil(t, err)
 	assert.Contains(t, expected, result)
 }
 
@@ -58,9 +59,10 @@ Noah
 		WithMaleNamesList(fileInput),
 	)
 
-	result := subject.RandomFirstNameMale()
+	result, err := subject.RandomFirstNameMale()
 	expected := []string{"John", "Bob", "Noah"}
 
+	assert.Nil(t, err)
 	assert.Contains(t, expected, result)
 }
 
@@ -91,9 +93,10 @@ Frankie
 		WithNonBinaryNamesList(fileInput),
 	)
 
-	result := subject.RandomFirstNameNonBinary()
+	result, err := subject.RandomFirstNameNonBinary()
 	expected := []string{"Billie", "Charlie", "Devin", "Frankie"}
 
+	assert.Nil(t, err)
 	assert.Contains(t, expected, result)
 }
 
@@ -126,9 +129,10 @@ COOK
 		WithLastNamesList(fileInput),
 	)
 
-	result := subject.RandomLastName()
+	result, err := subject.RandomLastName()
 	expected := []string{"Robinson", "Nguyen", "Mitchell", "Reyes", "Cook"}
 
+	assert.Nil(t, err)
 	assert.Contains(t, expected, result)
 }
 
@@ -224,6 +228,14 @@ func TestNameGenderDescriptionWithKey_NameGenderAny(t *testing.T) {
 	assert.Equal(t, "a = any/all", result)
 }
 
+func TestNameGenderDescriptionWithKey_InvalidGender(t *testing.T) {
+	var input NameGender = 999
+	result, err := input.DescriptionWithKey()
+
+	assert.NotNil(t, err)
+	assert.Empty(t, result)
+}
+
 func TestNameGenderDescription_InvalidNameGender(t *testing.T) {
 	var input NameGender = 999
 	result, err := input.Description()
@@ -275,24 +287,27 @@ func TestNameGenderFromString_WithInvalidInput(t *testing.T) {
 func TestAllGenderKeys(t *testing.T) {
 	expected := []string{"u", "f", "m", "a"}
 
-	result := AllNameGenderKeys()
+	result, err := AllNameGenderKeys()
 
+	assert.Nil(t, err)
 	assert.Equal(t, expected, result)
 }
 
 func TestAllGenderDescriptions(t *testing.T) {
 	expected := []string{"unisex", "female", "male", "any/all"}
 
-	result := AllNameGenderDescriptions()
+	result, err := AllNameGenderDescriptions()
 
+	assert.Nil(t, err)
 	assert.Equal(t, expected, result)
 }
 
 func TestAllGenderDescriptionsWithKeys(t *testing.T) {
 	expected := []string{"u = unisex", "f = female", "m = male", "a = any/all"}
 
-	result := AllNameGenderDescriptionsWithKeys()
+	result, err := AllNameGenderDescriptionsWithKeys()
 
+	assert.Nil(t, err)
 	assert.Equal(t, expected, result)
 }
 
@@ -305,8 +320,9 @@ func TestRandomFirstName_WithNameGenderFemale_ReturnsFemaleName(t *testing.T) {
 		WithNonBinaryNamesList("devin"),
 	)
 
-	result := subject.RandomFirstName(input)
+	result, err := subject.RandomFirstName(input)
 
+	assert.Nil(t, err)
 	assert.Equal(t, "Tina", result)
 }
 
@@ -319,8 +335,9 @@ func TestRandomFirstName_WithNameGenderMale_ReturnsMaleName(t *testing.T) {
 		WithNonBinaryNamesList("devin"),
 	)
 
-	result := subject.RandomFirstName(input)
+	result, err := subject.RandomFirstName(input)
 
+	assert.Nil(t, err)
 	assert.Equal(t, "Bob", result)
 }
 
@@ -333,8 +350,9 @@ func TestRandomFirstName_WithNameGenderUnisex_ReturnsUnisexName(t *testing.T) {
 		WithNonBinaryNamesList("devin"),
 	)
 
-	result := subject.RandomFirstName(input)
+	result, err := subject.RandomFirstName(input)
 
+	assert.Nil(t, err)
 	assert.Equal(t, "Devin", result)
 }
 
@@ -347,8 +365,9 @@ func TestRandomFirstName_WithNameGenderAny_ReturnsAnyName(t *testing.T) {
 		WithNonBinaryNamesList("devin"),
 	)
 
-	result := subject.RandomFirstName(input)
+	result, err := subject.RandomFirstName(input)
 
+	assert.Nil(t, err)
 	assert.Contains(t, []string{"Tina", "Bob", "Devin"}, result)
 }
 
@@ -361,7 +380,16 @@ func TestRandomFirstName_WithUnsupportedGender_ReturnsAnyName(t *testing.T) {
 		WithNonBinaryNamesList("devin"),
 	)
 
-	result := subject.RandomFirstName(input)
+	result, err := subject.RandomFirstName(input)
 
+	assert.Nil(t, err)
 	assert.Contains(t, []string{"Tina", "Bob", "Devin"}, result)
+}
+
+func TestNewPopulatedService_HasManyNames(t *testing.T) {
+	subject := NewPopulatedService()
+
+	assert.Equal(t, 1000, len(subject.GetFirstNamesFemale()))
+	assert.Equal(t, 1000, len(subject.GetFirstNamesMale()))
+	assert.Equal(t, 300, len(subject.GetFirstNamesNonBinary()))
 }

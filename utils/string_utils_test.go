@@ -50,3 +50,10 @@ func TestProperNounCase_WithNoChanges(t *testing.T) {
 
 	assert.Equal(t, "Devin", result)
 }
+
+func TestProperNounCase_Empty(t *testing.T) {
+	input := ""
+	result := ProperNounCase(input)
+
+	assert.Equal(t, "", result)
+}

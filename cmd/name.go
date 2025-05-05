@@ -25,15 +25,24 @@ When no gender is specified, the entire dataset will be sampled.`,
 			log.Fatal(err)
 		}
 
-		supportedGenders := utils.AllNameGenderKeys()
+		supportedGenders, err := utils.AllNameGenderKeys()
+		if err != nil {
+			log.Fatal(err)
+		}
 		if !slices.Contains(supportedGenders, gender) {
 			log.Fatalf("supported genders include: %s", strings.Join(supportedGenders, ", "))
 		}
 
 		service := utils.NewPopulatedService()
 
-		firstName := service.RandomFirstName(utils.NameGenderFromString(gender))
-		lastName := service.RandomLastName()
+		firstName, err := service.RandomFirstName(utils.NameGenderFromString(gender))
+		if err != nil {
+			log.Fatal(err)
+		}
+		lastName, err := service.RandomLastName()
+		if err != nil {
+			log.Fatal(err)
+		}
 
 		fullName := firstName + " " + lastName
 
@@ -44,7 +53,10 @@ When no gender is specified, the entire dataset will be sampled.`,
 func init() {
 
 	// flags for gender
-	docsGender := utils.AllNameGenderDescriptionsWithKeys()
+	docsGender, err := utils.AllNameGenderDescriptionsWithKeys()
+	if err != nil {
+		log.Fatal(err)
+	}
 	nameCmd.Flags().StringP("gender", "g", "a", fmt.Sprintf("Gender of the name. Omitting will sample all available names (optional) (options: %s)", strings.Join(docsGender, ", ")))
 
 	rootCmd.AddCommand(nameCmd)

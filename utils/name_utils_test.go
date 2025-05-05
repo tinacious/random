@@ -66,34 +66,34 @@ Noah
 	assert.Contains(t, expected, result)
 }
 
-func TestNameService_GetFirstNamesNonBinary(t *testing.T) {
+func TestNameService_GetFirstNamesUnisex(t *testing.T) {
 	fileInput := `Billie
 Charlie
 Devin
 Frankie
 `
 	subject := NewNameService(
-		WithNonBinaryNamesList(fileInput),
+		WithUnisexNamesList(fileInput),
 	)
 
-	result := subject.GetFirstNamesNonBinary()
+	result := subject.GetFirstNamesUnisex()
 	expected := []string{"Billie", "Charlie", "Devin", "Frankie"}
 
 	assert.Equal(t, 4, len(result))
 	assert.Equal(t, expected, result)
 }
 
-func TestNameService_RandomFirstNameNonBinary(t *testing.T) {
+func TestNameService_RandomFirstNameUnisex(t *testing.T) {
 	fileInput := `Billie
 Charlie
 Devin
 Frankie
 `
 	subject := NewNameService(
-		WithNonBinaryNamesList(fileInput),
+		WithUnisexNamesList(fileInput),
 	)
 
-	result, err := subject.RandomFirstNameNonBinary()
+	result, err := subject.RandomFirstNameUnisex()
 	expected := []string{"Billie", "Charlie", "Devin", "Frankie"}
 
 	assert.Nil(t, err)
@@ -317,7 +317,7 @@ func TestRandomFirstName_WithNameGenderFemale_ReturnsFemaleName(t *testing.T) {
 	subject := NewNameService(
 		WithFemaleNamesList("tina"),
 		WithMaleNamesList("bob"),
-		WithNonBinaryNamesList("devin"),
+		WithUnisexNamesList("devin"),
 	)
 
 	result, err := subject.RandomFirstName(input)
@@ -332,7 +332,7 @@ func TestRandomFirstName_WithNameGenderMale_ReturnsMaleName(t *testing.T) {
 	subject := NewNameService(
 		WithFemaleNamesList("tina"),
 		WithMaleNamesList("bob"),
-		WithNonBinaryNamesList("devin"),
+		WithUnisexNamesList("devin"),
 	)
 
 	result, err := subject.RandomFirstName(input)
@@ -347,7 +347,7 @@ func TestRandomFirstName_WithNameGenderUnisex_ReturnsUnisexName(t *testing.T) {
 	subject := NewNameService(
 		WithFemaleNamesList("tina"),
 		WithMaleNamesList("bob"),
-		WithNonBinaryNamesList("devin"),
+		WithUnisexNamesList("devin"),
 	)
 
 	result, err := subject.RandomFirstName(input)
@@ -362,7 +362,7 @@ func TestRandomFirstName_WithNameGenderAny_ReturnsAnyName(t *testing.T) {
 	subject := NewNameService(
 		WithFemaleNamesList("tina"),
 		WithMaleNamesList("bob"),
-		WithNonBinaryNamesList("devin"),
+		WithUnisexNamesList("devin"),
 	)
 
 	result, err := subject.RandomFirstName(input)
@@ -377,7 +377,7 @@ func TestRandomFirstName_WithUnsupportedGender_ReturnsAnyName(t *testing.T) {
 	subject := NewNameService(
 		WithFemaleNamesList("tina"),
 		WithMaleNamesList("bob"),
-		WithNonBinaryNamesList("devin"),
+		WithUnisexNamesList("devin"),
 	)
 
 	result, err := subject.RandomFirstName(input)
@@ -391,5 +391,5 @@ func TestNewPopulatedService_HasManyNames(t *testing.T) {
 
 	assert.Equal(t, 1000, len(subject.GetFirstNamesFemale()))
 	assert.Equal(t, 1000, len(subject.GetFirstNamesMale()))
-	assert.Equal(t, 300, len(subject.GetFirstNamesNonBinary()))
+	assert.Equal(t, 300, len(subject.GetFirstNamesUnisex()))
 }

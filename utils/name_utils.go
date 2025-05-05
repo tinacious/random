@@ -22,22 +22,22 @@ var namesLast string
 type NameService interface {
 	GetFirstNamesFemale() []string
 	GetFirstNamesMale() []string
-	GetFirstNamesNonBinary() []string
+	GetFirstNamesUnisex() []string
 	GetLastNames() []string
 
 	RandomFirstNameFemale() (string, error)
 	RandomFirstNameMale() (string, error)
-	RandomFirstNameNonBinary() (string, error)
+	RandomFirstNameUnisex() (string, error)
 	RandomFirstNameAny() (string, error)
 	RandomFirstName(NameGender) (string, error)
 	RandomLastName() (string, error)
 }
 
 type nameService struct {
-	female    []string
-	male      []string
-	nonBinary []string
-	last      []string
+	female []string
+	male   []string
+	unisex []string
+	last   []string
 }
 
 type NameGender int
@@ -173,7 +173,7 @@ func NewPopulatedService(options ...func(*nameService)) NameService {
 	return NewNameService(
 		WithFemaleNamesList(namesF),
 		WithMaleNamesList(namesM),
-		WithNonBinaryNamesList(namesU),
+		WithUnisexNamesList(namesU),
 		WithLastNamesList(namesLast),
 	)
 }
@@ -190,9 +190,9 @@ func WithMaleNamesList(namesList string) func(*nameService) {
 	}
 }
 
-func WithNonBinaryNamesList(namesList string) func(*nameService) {
+func WithUnisexNamesList(namesList string) func(*nameService) {
 	return func(s *nameService) {
-		s.nonBinary = namesFromTextList(namesList)
+		s.unisex = namesFromTextList(namesList)
 	}
 }
 
@@ -212,9 +212,9 @@ func (s *nameService) GetFirstNamesMale() []string {
 	return s.male
 }
 
-// GetFirstNamesNonBinary returns 300 names that are considered unisex according to the source
-func (s *nameService) GetFirstNamesNonBinary() []string {
-	return s.nonBinary
+// GetFirstNamesUnisex returns 300 names that are considered unisex according to the source
+func (s *nameService) GetFirstNamesUnisex() []string {
+	return s.unisex
 }
 
 // GetLastNames returns 1000 last names
@@ -246,9 +246,9 @@ func (s *nameService) RandomFirstNameMale() (string, error) {
 	return *name, nil
 }
 
-// RandomFirstNameNonBinary
-func (s *nameService) RandomFirstNameNonBinary() (string, error) {
-	names := s.GetFirstNamesNonBinary()
+// RandomFirstNameUnisex
+func (s *nameService) RandomFirstNameUnisex() (string, error) {
+	names := s.GetFirstNamesUnisex()
 	name, err := RandomItemFromList(names)
 
 	if err != nil {
@@ -260,7 +260,7 @@ func (s *nameService) RandomFirstNameNonBinary() (string, error) {
 
 // RandomFirstNameAny returns a first name of all available names (female, male, unisex)
 func (s *nameService) RandomFirstNameAny() (string, error) {
-	allNames := append(append(s.GetFirstNamesFemale(), s.GetFirstNamesMale()...), s.GetFirstNamesNonBinary()...)
+	allNames := append(append(s.GetFirstNamesFemale(), s.GetFirstNamesMale()...), s.GetFirstNamesUnisex()...)
 	name, err := RandomItemFromList(allNames)
 
 	if err != nil {
@@ -279,7 +279,7 @@ func (s *nameService) RandomFirstName(gender NameGender) (string, error) {
 		return s.RandomFirstNameMale()
 	}
 	if gender == NameGenderUnisex {
-		return s.RandomFirstNameNonBinary()
+		return s.RandomFirstNameUnisex()
 	}
 
 	return s.RandomFirstNameAny()

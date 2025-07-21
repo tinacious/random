@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/dustin/go-humanize"
 	"github.com/makiuchi-d/gozxing"
 	"github.com/makiuchi-d/gozxing/qrcode"
 	"github.com/spf13/cobra"
@@ -65,11 +66,7 @@ func qrCodeCmd(cmd *cobra.Command, args []string) {
 		log.Fatal("no data to encode")
 	}
 
-	if fileFormat == "png" {
-		fmt.Println("✅ Got the input. Converting to PNG. Should be quick.")
-	} else {
-		fmt.Println("✅ Got the input. Converting to SVG. This might take a bit. If it's taking too long, try reducing the file size.")
-	}
+	fmt.Printf("✅ Got the input. Converting to %s\n", strings.ToUpper(fileFormat))
 
 	enc := qrcode.NewQRCodeWriter()
 
@@ -91,7 +88,12 @@ func qrCodeCmd(cmd *cobra.Command, args []string) {
 
 	createImageFile(img, file, fileName, fileFormat)
 
-	fmt.Printf("✅ Successfully created %s\n", fileName)
+	fi, err := file.Stat()
+	fileSizeInfo := ""
+	if err == nil {
+		fileSizeInfo = fmt.Sprintf(" (size: %s)", humanize.IBytes(uint64(fi.Size())))
+	}
+	fmt.Printf("✅ Successfully created %s%s\n", fileName, fileSizeInfo)
 
 	if !shouldOpenFile {
 		return

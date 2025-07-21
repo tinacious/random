@@ -123,10 +123,51 @@ func createPng(img image.Image, file *os.File) error {
 }
 
 // uses png2svg to convert the image.Image interface into SVG
+// ref: https://github.com/xyproto/png2svg/blob/48dc9089026fdc81c70bf46e560791d81dcafea7/cmd/png2svg/main.go#L146-L170
 func createSvg(img image.Image, fileName string) {
+	var (
+		box          *png2svg.Box
+		x, y         int
+		expanded     bool
+		lastx, lasty int
+		lastLine     int // one message per line / y coordinate
+		done         bool
+	)
+	var optimizeColors bool = true
 	var verbose bool = false // todo: maybe make this configurable
+
 	pi := png2svg.NewPixelImage(img, verbose)
-	pi.CoverAllPixels()
+	pi.SetColorOptimize(true)
+
+	height := img.Bounds().Max.Y - img.Bounds().Min.Y
+
+	percentage := 0
+	lastPercentage := 0
+
+	for !done {
+		// Select the first uncovered pixel, searching from the given coordinate
+		x, y = pi.FirstUncovered(lastx, lasty)
+
+		if verbose && y != lastLine {
+			lastPercentage = percentage
+			percentage = int((float64(y) / float64(height)) * 100.0)
+			png2svg.Erase(len(fmt.Sprintf("%d%%", lastPercentage)))
+			fmt.Printf("%d%%", percentage)
+			lastLine = y
+		}
+
+		// Create a box at that location
+		box = pi.CreateBox(x, y)
+		// Expand the box to the right and downwards, until it can not expand anymore
+		expanded = pi.Expand(box)
+
+		// Use the expanded box. Color pink if it is > 1x1, and colorPink is true
+		pi.CoverBox(box, expanded && false, optimizeColors)
+
+		// Check if we are done, searching from the current x,y
+		done = pi.Done(x, y)
+	}
+
 	pi.WriteSVG(fileName)
 }
 

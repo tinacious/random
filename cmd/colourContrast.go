@@ -37,11 +37,14 @@ foreground %s vs. background %s
 Ratio: %.2f:1
 
 WCAG AA:
-Standard text (smaller than 24px) must have a contrast ratio of 4.5:1 to pass WCAG AA requirements.
-Large text (24px+) must have a contrast ratio of 3:1 to pass WCAG AA requirements.
+Standard text (smaller than 24px) must have a contrast ratio of 4.5:1
+to pass WCAG AA requirements.
+Large text (24px+) must have a contrast ratio of 3:1 to pass
+WCAG AA requirements.
 
 WCAG AAA:
-Standard text (smaller than 24px) must have a contrast ratio of 7:1 to pass WCAG AAA requirements.
+Standard text (smaller than 24px) must have a contrast ratio of 7:1
+to pass WCAG AAA requirements.
 Large text (24px+) must have a contrast ratio of 4.5:1 to pass WCAG AAA requirements.
 
 Normal-sized text (23px or less):

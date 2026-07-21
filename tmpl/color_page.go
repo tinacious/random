@@ -1,6 +1,7 @@
 package tmpl
 
 import (
+	_ "embed"
 	"html/template"
 	"io"
 )
@@ -9,9 +10,15 @@ type ColourPage struct {
 	Colours []string
 }
 
+//go:embed colours.html.tmpl
+var colourPageTemplate string
+
 func (c ColourPage) Render(w io.Writer) error {
-	tmplFile := "tmpl/colours.html.tmpl"
-	tmpl := template.Must(template.ParseFiles(tmplFile))
-	err := tmpl.Execute(w, c)
+	tmpl, err := template.New("colours").Parse(colourPageTemplate)
+	if err != nil {
+		return err
+	}
+
+	err = tmpl.Execute(w, c)
 	return err
 }

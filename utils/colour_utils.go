@@ -111,3 +111,78 @@ func GetStackedResolvedColour(layers []ColorLayer) (string, error) {
 
 	return resolvedColour, nil
 }
+
+// calculateLuminance computes the relative luminance of a color according to WCAG 2.x formulas.
+func calculateLuminance(color rgb) float64 {
+	// 1. Normalize channels from 0-255 to 0.0-1.0
+	r := color.r / 255.0
+	g := color.g / 255.0
+	b := color.b / 255.0
+
+	// 2. Apply WCAG gamma correction piecewise function
+	adjustChannel := func(c float64) float64 {
+		if c <= 0.03928 {
+			return c / 12.92
+		}
+		return math.Pow((c+0.055)/1.055, 2.4)
+	}
+
+	rAdj := adjustChannel(r)
+	gAdj := adjustChannel(g)
+	bAdj := adjustChannel(b)
+
+	// 3. Calculate final relative luminance based on human eye sensitivity
+	return 0.2126*rAdj + 0.7152*gAdj + 0.0722*bAdj
+}
+
+// CalculateContrastRatio calculates the exact WCAG contrast ratio between two hex colors.
+func CalculateContrastRatio(hex1, hex2 string) float64 {
+	color1 := parseHex(hex1)
+	color2 := parseHex(hex2)
+
+	lum1 := calculateLuminance(color1)
+	lum2 := calculateLuminance(color2)
+
+	// To calculate contrast, L1 must be the lighter color (higher luminance)
+	l1 := math.Max(lum1, lum2)
+	l2 := math.Min(lum1, lum2)
+
+	// WCAG Contrast Formula
+	return (l1 + 0.05) / (l2 + 0.05)
+}
+
+// GetGradeForWCAGAA gives a pass/fail grade for WCAG AA normal text
+func GetGradeForWCAGAA(ratio float64) string {
+	if ratio >= 4.5 {
+		return "PASS"
+	} else {
+		return "FAIL"
+	}
+}
+
+// GetGradeForWCAGAALarge gives a pass/fail grade for WCAG AA large text
+func GetGradeForWCAGAALarge(ratio float64) string {
+	if ratio >= 3.0 {
+		return "PASS"
+	} else {
+		return "FAIL"
+	}
+}
+
+// GetGradeForWCAGAAA gives a pass/fail grade for WCAG AAA normal text
+func GetGradeForWCAGAAA(ratio float64) string {
+	if ratio >= 7.0 {
+		return "PASS"
+	} else {
+		return "FAIL"
+	}
+}
+
+// GetGradeForWCAGAAALarge gives a pass/fail grade for WCAG AAA large text
+func GetGradeForWCAGAAALarge(ratio float64) string {
+	if ratio >= 4.5 {
+		return "PASS"
+	} else {
+		return "FAIL"
+	}
+}

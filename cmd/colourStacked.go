@@ -26,7 +26,7 @@ You can use this resolved colour as your background when calculating contrast ag
 	Run: func(cmd *cobra.Command, args []string) {
 		scn := bufio.NewScanner(os.Stdin)
 
-		fmt.Print("🔴🟢🔵 Enter colours, 1 on each line, with alpha value between 0 and 1, then press Ctrl+] and Enter.\nStart from the bottom, e.g. if my background is white and I have a dark grey overlay, I could write:\n\n#FFFFFF 1\n#111111 0.4\n\n")
+		fmt.Print("🔴🟢🔵 Enter colours, 1 on each line, with alpha value between 0 and 1, then press Ctrl+] and Enter.\nStart from the bottom, e.g. if my background is white and I have a dark grey overlay, I could write:\n\n#FFFFFF 1\n#111111 0.4\n\n------------------------\n\n")
 		var lines []string
 		for scn.Scan() {
 			line := scn.Text()

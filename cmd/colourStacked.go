@@ -17,18 +17,16 @@ import (
 
 var colourStackedCmd = &cobra.Command{
 	Use:   "stacked",
-	Short: "Colour contrast calculations for Web Content Accessibility Guidelines",
+	Short: "Resolve a final colour from a stack of semi-transparent colours on a solid background",
 	Long: `This command allows you to pass a list of colours with alpha channel to resolve
 a final colour of the stacked colours, starting from the bottom.
 This can be useful for calculating the actual colour of a background when there
 are semi-transparent layers like overlays and text shadows.
 You can use this resolved colour as your background when calculating contrast against WCAG requirements.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("colourStacked called")
-
 		scn := bufio.NewScanner(os.Stdin)
 
-		fmt.Print("🔴🟢🔵 Enter colours, 1 on each line, with alpha value between 0 and 1, then press Ctrl+] and Enter, e.g.:\n\n#FFFFFF 1\n#111111 0.4\n\n")
+		fmt.Print("🔴🟢🔵 Enter colours, 1 on each line, with alpha value between 0 and 1, then press Ctrl+] and Enter.\nStart from the bottom, e.g. if my background is white and I have a dark grey overlay, I could write:\n\n#FFFFFF 1\n#111111 0.4\n\n")
 		var lines []string
 		for scn.Scan() {
 			line := scn.Text()
@@ -78,22 +76,10 @@ You can use this resolved colour as your background when calculating contrast ag
 		}
 
 		fmt.Printf("✅ The resolved colour is: %s\n", resolved)
-
-		// todo: take a list of colours, e.g. background, layer 1, layer 2, text-shadow, foreground
 	},
 }
 
 func init() {
 	coloursCmd.AddCommand(colourStackedCmd)
 	colourCmd.AddCommand(colourStackedCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// colourContrastCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// colourContrastCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

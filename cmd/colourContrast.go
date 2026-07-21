@@ -65,7 +65,6 @@ More info: https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
 		)
 
 		fmt.Println(report)
-
 	},
 }
 
